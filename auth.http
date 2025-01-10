@@ -28,7 +28,7 @@ Content-Type: application/json
 }
 
 # save tokens from login response
-# "response.parsed_Body" is the boilerplate part, then the data from the response
+# "response.parsedBody" is the boilerplate part, then the data from the response
 # example response for this code:
 #{
 #  "user": {...},
