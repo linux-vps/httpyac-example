@@ -1,0 +1,72 @@
+# @name Variables
+@host = http://localhost:3000
+@email = cuclacvangsanh@gmail.com
+@password = 123456
+@name = Test User
+@accessToken = null 
+@refreshToken = null
+
+### register new account
+# @name signup
+POST /auth/signup
+Content-Type: application/json
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}",
+    "name": "{{name}}"
+}
+
+### login and save tokens
+# @name signin
+POST /auth/signin
+Content-Type: application/json
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+# save tokens from login response
+# "response.parsed_Body" is the boilerplate part, then the data from the response
+# example response for this code:
+#{
+#  "user": {...},
+#    ...
+#  },
+#  "session": {
+#    "access_token": "eyJhbGciOiJIUzI1NiIsImtpZCI6ImlOMGEyZWpjQU5pcFZjNmciLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2lzeHl0Z3p6bnlscGhjbmV3c3FrLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI4NGNmMDA0Ni0yN2NlLTRjN2UtOTE5MS0xOWY4YjU2OTdhNTUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzM2NDk5NTMzLCJpYXQiOjE3MzY0OTU5MzMsImVtYWlsIjoiY3VjbGFjdmFuZ3NhbmhAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3MzY0OTU5MzN9XSwic2Vzc2lvbl9pZCI6IjBiYjU5MTdmLTlmNDMtNDg0Yi05NDMzLWFjNzUzM2UyZmZkYyIsImlzX2Fub255bW91cyI6ZmFsc2V9.y_nRKEypLSM9iu1AbBx5jDfhJO5aMgGsXqIV5mg-170",
+#    "token_type": "bearer",
+#    "expires_in": 3600,
+#    "expires_at": 1736499533,
+#    "refresh_token": "p6iDJeVniUoRCrWmiDZMtg",
+#    "user": {...},
+#      ...
+#    }
+#  }
+#}
+@accessToken = {{response.parsedBody.session.access_token}}
+@refreshToken = {{response.parsedBody.session.refresh_token}}
+
+### get current user info
+# @name me
+GET /auth/me
+Authorization: Bearer {{accessToken}}
+
+### refresh tokens
+# @name refresh
+POST /auth/refresh
+Content-Type: application/json
+
+{
+    "refresh_token": "{{refreshToken}}"
+}
+
+# save new tokens form refresh response
+@accessToken = {{response.parsedBody.session.access_token}}
+@refreshToken = {{response.parsedBody.session.refresh_token}}
+
+### log out
+# @name signout
+POST /auth/signout
+Authorization: Bearer {{accessToken}}
