@@ -3,9 +3,10 @@
 @email = cuclacvangsanh@gmail.com
 @password = 123456
 @name = Test User
-@accessToken = null 
-@refreshToken = null
-
+{{
+  $global.accessToken=null;
+  $global.refreshToken=null;
+}}
 ### register new account
 # @name signup
 POST /auth/signup
@@ -45,13 +46,16 @@ Content-Type: application/json
 #    }
 #  }
 #}
-@accessToken = {{response.parsedBody.session.access_token}}
-@refreshToken = {{response.parsedBody.session.refresh_token}}
+{{
+  $global.accessToken=response.parsedBody.session.access_token;
+  $global.refreshToken=response.parsedBody.session.refresh_token;
+}}
+
 
 ### get current user info
 # @name me
 GET /auth/me
-Authorization: Bearer {{accessToken}}
+Authorization: Bearer {{$global.accessToken}}
 
 ### refresh tokens
 # @name refresh
@@ -59,7 +63,7 @@ POST /auth/refresh
 Content-Type: application/json
 
 {
-    "refresh_token": "{{refreshToken}}"
+    "refresh_token": "{{$global.refreshToken}}"
 }
 
 # save new tokens form refresh response
@@ -69,4 +73,4 @@ Content-Type: application/json
 ### log out
 # @name signout
 POST /auth/signout
-Authorization: Bearer {{accessToken}}
+Authorization: Bearer {{$global.accessToken}}
